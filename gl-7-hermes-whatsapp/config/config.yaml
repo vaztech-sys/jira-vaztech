@@ -1,0 +1,28 @@
+# ~/.hermes/config.yaml — PoC atendente WhatsApp da Global (GL-7)
+# Mescle com o config gerado pelo instalador se ele já tiver outras chaves.
+
+model:
+  provider: anthropic
+  # Confirme o nome exato com `hermes model` após instalar.
+  # Sonnet: melhor qualidade. Para reduzir custo, testar claude-haiku-4-5.
+  default: claude-sonnet-5-5
+
+# O padrão do Hermes para WhatsApp (hermes-whatsapp) inclui terminal, arquivos,
+# navegador e cron — NÃO usar com clientes. Aqui o bot só conversa e lembra
+# dos clientes (memory).
+platform_toolsets:
+  whatsapp: [memory]
+  # Etapa 2: adicionar o servidor MCP do catálogo Shopify aqui.
+
+# Trava extra: remove estes toolsets de qualquer plataforma, mesmo que alguém
+# reative no `hermes tools`. Esta VPS é dedicada ao atendente.
+agent:
+  disabled_toolsets:
+    - terminal
+    - file
+    - code_execution
+    - browser
+    - computer_use
+    - cronjob
+    - delegation
+    - image_gen
