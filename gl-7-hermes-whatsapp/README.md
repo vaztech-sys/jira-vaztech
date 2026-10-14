@@ -31,17 +31,34 @@ VPS da DigitalOcean.
    ssh root@<IP_DA_VPS> 'bash /root/gl-7-hermes-whatsapp/scripts/provision-vps.sh'
    ```
    O script cria o usuário `hermes`, ativa firewall (apenas SSH), swap e instala o Hermes com o instalador oficial.
+   Ao final, o instalador abre o assistente `hermes setup`: escolha **Skip / Leave unchanged / Keep current** em
+   tudo (provedor de modelo, terminal, navegador, imagem, voz, busca), **não marque nenhuma plataforma** de
+   mensagem e responda **No thanks** à telemetria. Visão pode ficar em **Auto**.
 
-2. **Configurar** (como usuário `hermes`):
+2. **Aplicar a trava e a persona.** Não substitua o `config.yaml` gerado pelo assistente (tem versão e
+   ajustes próprios); aplique só as nossas chaves com `hermes config set`. O `config/config.yaml` do kit
+   fica como referência do que deve estar ativo.
    ```bash
-   sudo -iu hermes
-   cp ~/gl-7-hermes-whatsapp/config/config.yaml ~/.hermes/config.yaml
-   cp ~/gl-7-hermes-whatsapp/config/SOUL.md     ~/.hermes/SOUL.md
-   cp ~/gl-7-hermes-whatsapp/config/env.example ~/.hermes/.env
-   chmod 600 ~/.hermes/.env
-   nano ~/.hermes/.env        # ANTHROPIC_API_KEY e WHATSAPP_ALLOWED_USERS
-   nano ~/.hermes/SOUL.md     # preencher os [COLCHETES] com dados reais da Global
+   sudo -iu hermes hermes config set platform_toolsets.whatsapp '[memory]'
+   sudo -iu hermes hermes config set agent.disabled_toolsets '[terminal, file, code_execution, browser, computer_use, cronjob, delegation, image_gen, web]'
+   sudo install -o hermes -g hermes -m 600 /home/hermes/gl-7-hermes-whatsapp/config/SOUL.md /home/hermes/.hermes/SOUL.md
+   sudo -iu hermes hermes config get platform_toolsets.whatsapp    # conferir
+   sudo -iu hermes hermes config get agent.disabled_toolsets
    ```
+   Não use `sudo -iu hermes bash -c '... $VAR ...'`: o `sudo -i` expande as variáveis antes da hora.
+
+   Quando houver chave e número de teste (o `.env` já existe, gerado pelo assistente; `config set` grava
+   nomes em MAIÚSCULAS no `.env`):
+   ```bash
+   sudo -iu hermes hermes config set model.provider anthropic
+   sudo -iu hermes hermes config set WHATSAPP_ENABLED true
+   sudo -iu hermes hermes config set WHATSAPP_MODE bot
+   sudo -iu hermes hermes config set WHATSAPP_ALLOWED_USERS '55119XXXXXXXX,55119YYYYYYYY'
+   # A chave vai pelo editor (não pela linha de comando, para não ficar no histórico do shell):
+   sudo -u hermes nano /home/hermes/.hermes/.env     # adicionar ANTHROPIC_API_KEY=sk-ant-...
+   sudo -u hermes nano /home/hermes/.hermes/SOUL.md  # preencher os [COLCHETES] com dados reais da Global
+   ```
+   Depois, escolha o modelo com `sudo -iu hermes hermes model`.
 
 3. **Testar o modelo no terminal** (sem WhatsApp ainda):
    ```bash

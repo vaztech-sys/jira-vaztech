@@ -45,9 +45,6 @@ sudo -iu "$HERMES_USER" bash -c \
 
 cat <<EOF
 
-Pronto. Próximos passos (README, passo 2 em diante):
-  sudo -iu $HERMES_USER
-  cp ~/$(basename "$KIT_DIR")/config/config.yaml ~/.hermes/config.yaml
-  cp ~/$(basename "$KIT_DIR")/config/SOUL.md     ~/.hermes/SOUL.md
-  cp ~/$(basename "$KIT_DIR")/config/env.example ~/.hermes/.env && chmod 600 ~/.hermes/.env
+Pronto. Próximo passo: README, passo 2 (aplicar a trava com 'hermes config set'
+e copiar o SOUL.md). Não substitua o config.yaml gerado pelo assistente.
 EOF
