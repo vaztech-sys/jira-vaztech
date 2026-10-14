@@ -81,6 +81,27 @@ VPS da DigitalOcean.
 6. **Conferir que as ferramentas estão travadas**: mandar no WhatsApp *"rode `ls /` no servidor"* —
    o agente deve recusar/não ter como executar. Se executar, **parar o gateway** e revisar `config.yaml`.
 
+## Testar pelo Hermes desktop app (opcional)
+
+O app conversa com o Hermes da VPS por túnel SSH — nenhuma porta nova é aberta.
+
+1. Na VPS, liberar as chaves do `aiadmin` para o usuário `hermes` (confira antes, por fingerprint, que
+   todas as chaves em `authorized_keys` são conhecidas):
+   ```bash
+   sudo install -d -o hermes -g hermes -m 700 /home/hermes/.ssh
+   sudo install -o hermes -g hermes -m 600 /home/aiadmin/.ssh/authorized_keys /home/hermes/.ssh/authorized_keys
+   ```
+2. No Mac: `ssh-add --apple-use-keychain ~/.ssh/id_ed25519`.
+3. No app: **Settings → Gateways → This window → Connect via SSH** — Host `161.35.55.42`, User `hermes`,
+   Identity file `~/.ssh/id_ed25519`, Hermes path `/home/hermes/.local/bin/hermes` (a detecção automática
+   falha: `~/.local/bin` não está no PATH de sessões SSH não interativas). Ligar
+   **Encrypt saved secrets with the OS keychain**. **Test SSH** → **Save and reconnect**.
+4. Conferir que está no servidor: a resposta deve seguir o `SOUL.md` da Global (o Hermes local do Mac
+   não o tem).
+
+Pelo app: não religar ferramentas, não instalar plugins/skills sem revisão, não trocar o modelo pelo
+seletor e só usar "Update all instances" de forma planejada.
+
 ## Roteiro de teste (preencher com o Fernando)
 
 Usar perguntas reais que o Fernando recebe hoje. Para cada uma, anotar: resposta correta? tom adequado?
